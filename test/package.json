@@ -1,0 +1,39 @@
+{
+    "name": "hello-solana",
+    "version": "1.0.0",
+    "description": "",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/Coding-and-Crypto/Rust-Solana-Tutorial.git"
+    },
+    "scripts": {
+        "init": "npm i",
+        "check": "node -v && npm run cargo_version && npm run program:cargo_check",
+        "ts_start": "ts-node src/client/main.ts",
+        "js_start": "node src/client/test.js",
+        "cargo_version": "cargo -V",
+        "program:cargo_check": "cargo check --manifest-path=./src/program/Cargo.toml",
+        "program:cargo_clean": "cargo clean --manifest-path=./src/program/Cargo.toml",
+        "program:cargo_build": "cargo build --manifest-path=./src/program/Cargo.toml",
+        "program：cargo_test": "cargo test-bpf --manifest-path=./src/program/Cargo.toml",
+        "linux:program:cargo_build_bpf": "cargo build-bpf --manifest-path=./src/program/Cargo.toml --bpf-out-dir=./dist/temp/program",
+        "linux:program:cargo_build_bpf_timestap": "node scripts/build.js | xargs -I {} cargo build-bpf --manifest-path=./src/program/Cargo.toml --bpf-out-dir=./dist/temp/program{}",
+        "linux:program:dist_temp_clean": "rmdir /s /q \"./dist/temp\"",
+        "windows:program:cargo_build_bpf": "cargo build-bpf --manifest-path=./src/program/Cargo.toml --bpf-out-dir=./dist/temp/program",
+        "windows:program:cargo_build_bpf_timestap": "powershell -Command \"& {node .\\src\\build_time.js} | %{$_.trim()} | %{$_.replace('`r`n','')} | ForEach-Object { cargo build-bpf --manifest-path=./src/program/Cargo.toml --bpf-out-dir=./dist/temp/program$_ }\"",
+        "windows:program:dist_temp_clean": "rm -rf ./dist/temp"
+    },
+    "dependencies": {
+        "@solana/web3.js": "^1.37.1",
+        "mz": "^2.7.0"
+    },
+    "devDependencies": {
+        "@tsconfig/recommended": "^1.0.1",
+        "@types/mz": "^2.7.2",
+        "ts-node": "^10.0.0",
+        "typescript": "^4.0.5"
+    },
+    "engines": {
+        "node": ">=14.0.0"
+    }
+}
