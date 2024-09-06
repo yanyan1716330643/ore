@@ -33,7 +33,7 @@ pub fn process_instruction(
     accounts: &[AccountInfo],
     data: &[u8],
 ) -> ProgramResult {
-
+    msg!("v0.1");
     msg!("process_instruction_1 _program_id_ {:?} _accounts_ {:?} _data_ {:?} ",program_id,accounts,data);
     // step1 _o_ 2ZXWmYTKTi1hWH1PuA6pZHcj7RCU4JKtRUPUDQPPkzZX _o_ [AccountInfo { key: Dbfxv94A9LPpsqdqa1gGkTkWUG4vJ5upbDesKQF9UvbJ, owner: 11111111111111111111111111111111, is_signer: true, is_writable: true, executable: false, rent_epoch: 18446744073709551615, lamports: 5096086839, data.len: 0, .. }] _o_ []
 
