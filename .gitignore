@@ -2,3 +2,5 @@
 target
 test-ledger
 /.idea
+**/node_models/
+/test/node_modules/
