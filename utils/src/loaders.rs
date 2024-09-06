@@ -6,13 +6,16 @@ use solana_program::{
 #[cfg(feature = "spl")]
 use spl_token::state::Mint;
 
+use solana_program::{msg};
+
 /// Errors if:
 /// - Account is not a signer.
 pub fn load_signer(info: &AccountInfo<'_>) -> Result<(), ProgramError> {
+    msg!("load_signer_1 _info.is_signer_ {:?} ",!info.is_signer);
     if !info.is_signer {
         return Err(ProgramError::MissingRequiredSignature);
     }
-
+    msg!("load_signer_2");
     Ok(())
 }
 
@@ -25,16 +28,17 @@ pub fn load_uninitialized_pda(
     bump: u8,
     program_id: &Pubkey,
 ) -> Result<(), ProgramError> {
+    msg!("load_uninitialized_pda_1 _info_ {:?} _seeds_ {:?} _bump_ {:?} _program_id_ {:?} ",info,seeds,bump,program_id);
     let pda = Pubkey::find_program_address(seeds, program_id);
-
+    msg!("load_uninitialized_pda_2");
     if info.key.ne(&pda.0) {
         return Err(ProgramError::InvalidSeeds);
     }
-
+    msg!("load_uninitialized_pda_3");
     if bump.ne(&pda.1) {
         return Err(ProgramError::InvalidSeeds);
     }
-
+    msg!("load_uninitialized_pda_4");
     load_system_account(info, true)
 }
 
@@ -43,18 +47,19 @@ pub fn load_uninitialized_pda(
 /// - Data is not empty.
 /// - Account is not writable.
 pub fn load_system_account(info: &AccountInfo<'_>, is_writable: bool) -> Result<(), ProgramError> {
+    msg!("load_system_account_1 _info_ {:?} _is_writable_ {:?}",info,is_writable);
     if info.owner.ne(&system_program::id()) {
         return Err(ProgramError::InvalidAccountOwner);
     }
-
+    msg!("load_system_account_2");
     if !info.data_is_empty() {
         return Err(ProgramError::AccountAlreadyInitialized);
     }
-
+    msg!("load_system_account_3");
     if is_writable && !info.is_writable {
         return Err(ProgramError::InvalidAccountData);
     }
-
+    msg!("load_system_account_4");
     Ok(())
 }
 
@@ -62,10 +67,11 @@ pub fn load_system_account(info: &AccountInfo<'_>, is_writable: bool) -> Result<
 /// - Owner is not the sysvar address.
 /// - Account cannot load with the expected address.
 pub fn load_sysvar(info: &AccountInfo<'_>, key: Pubkey) -> Result<(), ProgramError> {
+    msg!("load_sysvar_1 _info_ {:?} _key_ {:?}",info,key);
     if info.owner.ne(&sysvar::id()) {
         return Err(ProgramError::InvalidAccountOwner);
     }
-
+    msg!("load_sysvar_2");
     load_account(info, key, false)
 }
 
@@ -92,14 +98,15 @@ pub fn load_account(
 /// - Address does not match the expected value.
 /// - Account is not executable.
 pub fn load_program(info: &AccountInfo<'_>, key: Pubkey) -> Result<(), ProgramError> {
+    msg!("load_program_1 _info_ {:?} _key_ {:?}",info,key);
     if info.key.ne(&key) {
         return Err(ProgramError::IncorrectProgramId);
     }
-
+    msg!("load_program_2");
     if !info.executable {
         return Err(ProgramError::InvalidAccountData);
     }
-
+    msg!("load_program_3");
     Ok(())
 }
 

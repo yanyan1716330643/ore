@@ -3,7 +3,8 @@ use const_crypto::ed25519;
 use solana_program::{pubkey, pubkey::Pubkey};
 
 /// The authority allowed to initialize the program.
-pub const INITIALIZER_ADDRESS: Pubkey = pubkey!("HBUh9g46wk2X89CvaNN15UmsznP59rh6od1h8JwYAopk");
+// pub const INITIALIZER_ADDRESS: Pubkey = pubkey!("HBUh9g46wk2X89CvaNN15UmsznP59rh6od1h8JwYAopk");
+pub const INITIALIZER_ADDRESS: Pubkey = pubkey!("Dbfxv94A9LPpsqdqa1gGkTkWUG4vJ5upbDesKQF9UvbJ");
 
 /// The base reward rate to intialize the program with.
 pub const INITIAL_BASE_REWARD_RATE: u64 = BASE_REWARD_RATE_MIN_THRESHOLD;

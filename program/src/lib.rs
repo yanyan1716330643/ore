@@ -18,6 +18,8 @@ use stake::*;
 use update::*;
 use upgrade::*;
 
+use solana_program::{msg};
+
 use ore_api::instruction::*;
 use solana_program::{
     self, account_info::AccountInfo, entrypoint::ProgramResult, program_error::ProgramError,
@@ -31,13 +33,21 @@ pub fn process_instruction(
     accounts: &[AccountInfo],
     data: &[u8],
 ) -> ProgramResult {
-    if program_id.ne(&ore_api::id()) {
-        return Err(ProgramError::IncorrectProgramId);
-    }
+
+    msg!("process_instruction_1 _program_id_ {:?} _accounts_ {:?} _data_ {:?} ",program_id,accounts,data);
+    // step1 _o_ 2ZXWmYTKTi1hWH1PuA6pZHcj7RCU4JKtRUPUDQPPkzZX _o_ [AccountInfo { key: Dbfxv94A9LPpsqdqa1gGkTkWUG4vJ5upbDesKQF9UvbJ, owner: 11111111111111111111111111111111, is_signer: true, is_writable: true, executable: false, rent_epoch: 18446744073709551615, lamports: 5096086839, data.len: 0, .. }] _o_ []
+
+    // if program_id.ne(&ore_api::id()) {
+    //     return Err(ProgramError::IncorrectProgramId);
+    // }
+
+    msg!("process_instruction_2 _program_id.ne(&ore_api::id())_ {:?} ",program_id.ne(&ore_api::id()));
 
     let (tag, data) = data
         .split_first()
         .ok_or(ProgramError::InvalidInstructionData)?;
+
+    msg!("process_instruction_3 _tag_ {:?} _data_ {:?} ",tag,data);
 
     match OreInstruction::try_from(*tag).or(Err(ProgramError::InvalidInstructionData))? {
         OreInstruction::Claim => process_claim(accounts, data)?,
