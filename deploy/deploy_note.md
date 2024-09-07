@@ -4,5 +4,7 @@
 
 # 合约发布
 ```
-solana program deploy ore.so --upgrade-authority Dbfxv94A9LPpsqdqa1gGkTkWUG4vJ5upbDesKQF9UvbJ  --keypair ./devnet_01.json
+
+solana program deploy ./ore.so --upgrade-authority ./devnet_01.json  --program-id ./ore-keypair.json  --fee-payer ./devnet_01.json --keypair ./devnet_01.json  --use-rpc
+
 ```
