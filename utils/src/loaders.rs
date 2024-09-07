@@ -47,19 +47,19 @@ pub fn load_uninitialized_pda(
 /// - Data is not empty.
 /// - Account is not writable.
 pub fn load_system_account(info: &AccountInfo<'_>, is_writable: bool) -> Result<(), ProgramError> {
-    msg!("load_system_account_1 _info_ {:?} _is_writable_ {:?}",info,is_writable);
+    // msg!("load_system_account_1 _info_ {:?} _is_writable_ {:?}",info,is_writable);
     if info.owner.ne(&system_program::id()) {
         return Err(ProgramError::InvalidAccountOwner);
     }
-    msg!("load_system_account_2");
+    // msg!("load_system_account_2");
     if !info.data_is_empty() {
         return Err(ProgramError::AccountAlreadyInitialized);
     }
-    msg!("load_system_account_3");
+    // msg!("load_system_account_3");
     if is_writable && !info.is_writable {
         return Err(ProgramError::InvalidAccountData);
     }
-    msg!("load_system_account_4");
+    // msg!("load_system_account_4");
     Ok(())
 }
 
@@ -67,11 +67,11 @@ pub fn load_system_account(info: &AccountInfo<'_>, is_writable: bool) -> Result<
 /// - Owner is not the sysvar address.
 /// - Account cannot load with the expected address.
 pub fn load_sysvar(info: &AccountInfo<'_>, key: Pubkey) -> Result<(), ProgramError> {
-    msg!("load_sysvar_1 _info_ {:?} _key_ {:?}",info,key);
+    // msg!("load_sysvar_1 _info_ {:?} _key_ {:?}",info,key);
     if info.owner.ne(&sysvar::id()) {
         return Err(ProgramError::InvalidAccountOwner);
     }
-    msg!("load_sysvar_2");
+    // msg!("load_sysvar_2");
     load_account(info, key, false)
 }
 
@@ -98,15 +98,15 @@ pub fn load_account(
 /// - Address does not match the expected value.
 /// - Account is not executable.
 pub fn load_program(info: &AccountInfo<'_>, key: Pubkey) -> Result<(), ProgramError> {
-    msg!("load_program_1 _info_ {:?} _key_ {:?}",info,key);
+    // msg!("load_program_1 _info_ {:?} _key_ {:?}",info,key);
     if info.key.ne(&key) {
         return Err(ProgramError::IncorrectProgramId);
     }
-    msg!("load_program_2");
+    // msg!("load_program_2");
     if !info.executable {
         return Err(ProgramError::InvalidAccountData);
     }
-    msg!("load_program_3");
+    // msg!("load_program_3");
     Ok(())
 }
 
