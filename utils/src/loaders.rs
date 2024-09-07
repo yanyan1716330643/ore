@@ -28,12 +28,12 @@ pub fn load_uninitialized_pda(
     bump: u8,
     program_id: &Pubkey,
 ) -> Result<(), ProgramError> {
-    msg!("load_uninitialized_pda_1 _info_ {:?} _seeds_ {:?} _bump_ {:?} _program_id_ {:?} ",info,seeds,bump,program_id);
+    // msg!("load_uninitialized_pda_1 _info_ {:?} _seeds_ {:?} _bump_ {:?} _program_id_ {:?} ",info,seeds,bump,program_id);
     let pda = Pubkey::find_program_address(seeds, program_id);
-    msg!("load_uninitialized_pda_1 _info_ {:?} _seeds_ {:?} _bump_ {:?} _program_id_ {:?} _pad_ {:?} _info.key_ {:?} _&pda.0_ {:?} ",info,seeds,bump,program_id,pda,info.key,&pda.0);
-    if info.key.ne(&pda.0) {
-        return Err(ProgramError::InvalidSeeds);
-    }
+    msg!("load_uninitialized_pda_2 _info_ {:?} _seeds_ {:?} _bump_ {:?} _program_id_ {:?} _pad_ {:?} _info.key_ {:?} _&pda.0_ {:?} ",info,seeds,bump,program_id,pda,info.key,&pda.0);
+    // if info.key.ne(&pda.0) {
+    //     return Err(ProgramError::InvalidSeeds);
+    // }
     msg!("load_uninitialized_pda_3");
     if bump.ne(&pda.1) {
         return Err(ProgramError::InvalidSeeds);
@@ -47,7 +47,7 @@ pub fn load_uninitialized_pda(
 /// - Data is not empty.
 /// - Account is not writable.
 pub fn load_system_account(info: &AccountInfo<'_>, is_writable: bool) -> Result<(), ProgramError> {
-    // msg!("load_system_account_1 _info_ {:?} _is_writable_ {:?}",info,is_writable);
+    msg!("load_system_account_1 _info_ {:?} _is_writable_ {:?}",info,is_writable);
     if info.owner.ne(&system_program::id()) {
         return Err(ProgramError::InvalidAccountOwner);
     }

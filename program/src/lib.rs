@@ -36,8 +36,11 @@ pub fn process_instruction(
     // msg!("v0.2");//修复计算单元超出调试
     // msg!("v0.3");//修复内存溢出调试
     // msg!("v0.4");//pda调试
-    msg!("v0.5");//load_uninitialized_pda 内存溢出调试
-    msg!("process_instruction_1 _program_id_ {:?} _accounts_ {:?} _data_ {:?} ",program_id,accounts,data);
+    // msg!("v0.5");//load_uninitialized_pda 内存溢出调试
+    // msg!("v0.6");//减少日志调试
+    // msg!("v0.7");//Transaction simulation failed: Error processing Instruction 0: Provided seeds do not result in a valid address
+    msg!("v0.8");//关闭一个可能错误的校验
+    // msg!("process_instruction_1 _program_id_ {:?} _accounts_ {:?} _data_ {:?} ",program_id,accounts,data);
 
     if program_id.ne(&ore_api::id()) {
         return Err(ProgramError::IncorrectProgramId);

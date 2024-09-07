@@ -16,10 +16,10 @@ use spl_token::state::Mint;
 
 /// Initialize sets up the ORE program to begin mining.
 pub fn process_initialize(accounts: &[AccountInfo<'_>], data: &[u8]) -> ProgramResult {
-    msg!("process_initialize_1 _accounts_ {:?} _data_ {:?} ",accounts,data);
+    // msg!("process_initialize_1 _accounts_ {:?} _data_ {:?} ",accounts,data);
     // Parse args.
     let args = Initialize::try_from_bytes(data)?;
-    msg!("process_initialize_2 _args_ {:?} ",args);
+    // msg!("process_initialize_2 _args_ {:?} ",args);
     // Load accounts.
     let [
     signer,
@@ -89,6 +89,7 @@ pub fn process_initialize(accounts: &[AccountInfo<'_>], data: &[u8]) -> ProgramR
     // );
 
     load_signer(signer)?;
+    msg!("process_initialize_3.1");
     load_uninitialized_pda(bus_0_info, &[BUS, &[0]], args.bus_0_bump, &ore_api::id())?;
     load_uninitialized_pda(bus_1_info, &[BUS, &[1]], args.bus_1_bump, &ore_api::id())?;
     load_uninitialized_pda(bus_2_info, &[BUS, &[2]], args.bus_2_bump, &ore_api::id())?;
