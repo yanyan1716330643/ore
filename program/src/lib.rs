@@ -34,7 +34,8 @@ pub fn process_instruction(
     data: &[u8],
 ) -> ProgramResult {
     // msg!("v0.2");//修复计算单元超出调试
-    msg!("v0.3");//修复内存溢出调试
+    // msg!("v0.3");//修复内存溢出调试
+    msg!("v0.4");//pda调试
     msg!("process_instruction_1 _program_id_ {:?} _accounts_ {:?} _data_ {:?} ",program_id,accounts,data);
 
     if program_id.ne(&ore_api::id()) {
