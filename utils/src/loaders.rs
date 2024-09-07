@@ -28,7 +28,7 @@ pub fn load_uninitialized_pda(
     bump: u8,
     program_id: &Pubkey,
 ) -> Result<(), ProgramError> {
-    // msg!("load_uninitialized_pda_1 _info_ {:?} _seeds_ {:?} _bump_ {:?} _program_id_ {:?} ",info,seeds,bump,program_id);
+    msg!("load_uninitialized_pda_1 _info_ {:?} _seeds_ {:?} _bump_ {:?} _program_id_ {:?} ",info,seeds,bump,program_id);
     let pda = Pubkey::find_program_address(seeds, program_id);
     msg!("load_uninitialized_pda_1 _info_ {:?} _seeds_ {:?} _bump_ {:?} _program_id_ {:?} _pad_ {:?} _info.key_ {:?} _&pda.0_ {:?} ",info,seeds,bump,program_id,pda,info.key,&pda.0);
     if info.key.ne(&pda.0) {
