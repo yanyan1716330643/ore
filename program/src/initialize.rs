@@ -45,46 +45,48 @@ pub fn process_initialize(accounts: &[AccountInfo<'_>], data: &[u8]) -> ProgramR
     else {
         return Err(ProgramError::NotEnoughAccountKeys);
     };
-    msg!("process_initialize_3 \
-    _signer_ {:?} \
-    _bus_0_info_ {:?} \
-    _bus_1_info_ {:?} \
-    _bus_2_info_ {:?} \
-    _bus_3_info_ {:?} \
-    _bus_4_info_ {:?} \
-    _bus_5_info_ {:?} \
-    _bus_6_info_ {:?} \
-    _bus_7_info_ {:?} \
-    _config_info_ {:?} \
-    _metadata_info_ {:?} \
-    _mint_info_ {:?} \
-    _treasury_info_ {:?} \
-    _treasury_tokens_info_ {:?} \
-    _system_program_ {:?} \
-    _token_program_ {:?} \
-    _associated_token_program_ {:?} \
-    _metadata_program_ {:?} \
-    _rent_sysvar_ {:?}",
-    signer,
-    bus_0_info,
-    bus_1_info,
-    bus_2_info,
-    bus_3_info,
-    bus_4_info,
-    bus_5_info,
-    bus_6_info,
-    bus_7_info,
-    config_info,
-    metadata_info,
-    mint_info,
-    treasury_info,
-    treasury_tokens_info,
-    system_program,
-    token_program,
-    associated_token_program,
-    metadata_program,
-    rent_sysvar
-    );
+    msg!("process_initialize_3");
+    // 'Program log: Error: memory allocation failed, out of memory',
+    // msg!("process_initialize_3 \
+    // _signer_ {:?} \
+    // _bus_0_info_ {:?} \
+    // _bus_1_info_ {:?} \
+    // _bus_2_info_ {:?} \
+    // _bus_3_info_ {:?} \
+    // _bus_4_info_ {:?} \
+    // _bus_5_info_ {:?} \
+    // _bus_6_info_ {:?} \
+    // _bus_7_info_ {:?} \
+    // _config_info_ {:?} \
+    // _metadata_info_ {:?} \
+    // _mint_info_ {:?} \
+    // _treasury_info_ {:?} \
+    // _treasury_tokens_info_ {:?} \
+    // _system_program_ {:?} \
+    // _token_program_ {:?} \
+    // _associated_token_program_ {:?} \
+    // _metadata_program_ {:?} \
+    // _rent_sysvar_ {:?}",
+    // signer,
+    // bus_0_info,
+    // bus_1_info,
+    // bus_2_info,
+    // bus_3_info,
+    // bus_4_info,
+    // bus_5_info,
+    // bus_6_info,
+    // bus_7_info,
+    // config_info,
+    // metadata_info,
+    // mint_info,
+    // treasury_info,
+    // treasury_tokens_info,
+    // system_program,
+    // token_program,
+    // associated_token_program,
+    // metadata_program,
+    // rent_sysvar
+    // );
 
     load_signer(signer)?;
     load_uninitialized_pda(bus_0_info, &[BUS, &[0]], args.bus_0_bump, &ore_api::id())?;
