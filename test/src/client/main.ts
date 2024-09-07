@@ -5,6 +5,7 @@ import {
   LAMPORTS_PER_SOL,
   TransactionInstruction,
   Transaction,
+  ComputeBudgetProgram,
   sendAndConfirmTransaction, Blockhash,
 } from '@solana/web3.js';
 // @ts-ignore
@@ -92,7 +93,7 @@ async function main() {
   }
 
   // 假设的 bump 值
-  const cmd = Buffer.from("d");
+  // const cmd = Buffer.from("d");
   // const bus_0_bump = Buffer.from("0");
   // const bus_1_bump = Buffer.from("1");
   // const bus_2_bump = Buffer.from("2");
@@ -106,12 +107,27 @@ async function main() {
   // const mint_bump = Buffer.from("a");
   // const treasury_bump = Buffer.from("b");
   // const data = Buffer.concat([cmd,bus_0_bump, bus_1_bump, bus_2_bump, bus_3_bump, bus_4_bump, bus_5_bump, bus_6_bump, bus_7_bump, config_bump, metadata_bump, mint_bump, treasury_bump])
-  const data = Buffer.concat([cmd])
+  // const data = Buffer.concat([cmd])
+  const data = Buffer.alloc(13);
+  data.writeUInt8(100,0);
+  for(let i=1;i<13;i++){
+    data.writeUInt8(i,i);
+  }
+  let keys = new Array(19);
+  // let keys = [];
+  for (let i = 0; i < 19; i++) {
+    if (i==0){
+      keys[i]={pubkey: userKeypair.publicKey, isSigner: true, isWritable: true}
+    }else {
+      keys[i]={pubkey: userKeypair.publicKey, isSigner: false, isWritable: false}
+    }
+
+  }
   console.log("=======","50","start program ping");
   const instruction = new TransactionInstruction({
     // @ts-ignore
     recentBlockhash: blockhash,
-    keys: [{pubkey: userKeypair.publicKey, isSigner: true, isWritable: true},{pubkey: userKeypair2.publicKey, isSigner: false, isWritable: true}],
+    keys: keys,
     programId,
     data: data,
     //data: Buffer.from("0XXXXXXXXX"), 48 88 88 ...
@@ -130,7 +146,7 @@ async function main() {
   });
   await sendAndConfirmTransaction(
     connection,
-    new Transaction().add(instruction),
+    new Transaction().add(instruction).add(ComputeBudgetProgram.setComputeUnitLimit({ units: 8_00_000 })),
     [userKeypair],
   ).then(r=>{
     console.log("=======","50","program ping success",r);
