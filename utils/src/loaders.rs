@@ -51,15 +51,15 @@ pub fn load_system_account(info: &AccountInfo<'_>, is_writable: bool) -> Result<
     if info.owner.ne(&system_program::id()) {
         return Err(ProgramError::InvalidAccountOwner);
     }
-    // msg!("load_system_account_2");
+    msg!("load_system_account_2");
     if !info.data_is_empty() {
         return Err(ProgramError::AccountAlreadyInitialized);
     }
-    // msg!("load_system_account_3");
+    msg!("load_system_account_3");
     if is_writable && !info.is_writable {
         return Err(ProgramError::InvalidAccountData);
     }
-    // msg!("load_system_account_4");
+    msg!("load_system_account_4");
     Ok(())
 }
 

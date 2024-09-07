@@ -52,12 +52,7 @@ async function main() {
   let userPublicKey: PublicKey = userKeypair.publicKey;
   console.log("=======","20","userPublicKey is",userPublicKey.toBase58());
 
-  console.log("=======","21","start user keypair loading");
-  const userKeyString2 = await fs.readFile(USER_KEYPAIR_PATH2, {encoding: 'utf8'});
-  const userSecretKey2 = Uint8Array.from(JSON.parse(userKeyString2));
-  const userKeypair2 = Keypair.fromSecretKey(userSecretKey2);
-  let userPublicKey2: PublicKey = userKeypair2.publicKey;
-  console.log("=======","21","userPublicKey is",userPublicKey2.toBase58());
+
 
   console.log("=======","30","start network init(devnet) and get recent block");
   let connection = new Connection('https://api.devnet.solana.com', 'confirmed');
@@ -110,8 +105,36 @@ async function main() {
   // const data = Buffer.concat([cmd])
   const data = Buffer.alloc(13);
   data.writeUInt8(100,0);
+  let seedStrArray = new Array(12);
+  seedStrArray[0]="bus"
+  seedStrArray[1]="bus"
+  seedStrArray[2]="bus"
+  seedStrArray[3]="bus"
+  seedStrArray[4]="bus"
+  seedStrArray[5]="bus"
+  seedStrArray[6]="bus"
+  seedStrArray[7]="bus"
+  seedStrArray[8]="config"
+  seedStrArray[9]="metadata"
+  seedStrArray[10]="mint"
+  seedStrArray[11]="proof"
+  seedStrArray[12]="treasury"
+
+
+
+  let seeds = new Array(12);
+  let bumps = new Array(12);
   for(let i=1;i<13;i++){
-    data.writeUInt8(i,i);
+    seeds[i-1] = Buffer.from(seedStrArray[i-1])
+  }
+  // 计算每个种子的 PDA 和 bump 值
+  for (let i = 0; i < seeds.length; i++) {
+    const [pda, bump] = await PublicKey.findProgramAddress([seeds[i]], programId);
+    bumps[i] = bump; // 存储 bump 值
+  }
+  // 使用 bumps 填充剩余的缓冲区
+  for (let i = 1; i < 13; i++) {
+    data.writeUInt8(bumps[i - 1], i); // 将 bump 值写入缓冲区
   }
   let keys = new Array(19);
   // let keys = [];
@@ -119,7 +142,17 @@ async function main() {
     if (i==0){
       keys[i]={pubkey: userKeypair.publicKey, isSigner: true, isWritable: true}
     }else {
-      keys[i]={pubkey: userKeypair.publicKey, isSigner: false, isWritable: false}
+      const formattedNumber = (i + 1).toString().padStart(2, '0');
+      const temp_path = path.join(
+          path.resolve(__dirname, '../../../deploy'),
+          `devnet_${formattedNumber}.json`
+      );
+      const userKeyStringTemp = await fs.readFile(temp_path, {encoding: 'utf8'});
+      const userSecretKeyTemp = Uint8Array.from(JSON.parse(userKeyStringTemp));
+      const userKeypairTemp = Keypair.fromSecretKey(userSecretKeyTemp);
+
+      let userPublicKeyTemp: PublicKey = userKeypairTemp.publicKey;
+      keys[i]={pubkey: userKeypairTemp.publicKey, isSigner: false, isWritable: false}
     }
 
   }
