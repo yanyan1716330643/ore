@@ -139,9 +139,9 @@ async function main() {
     // if (i==12){//treasury account
     //
     // }
-    // if (i==13){//treasury_tokens account
-    //
-    // }
+    if (i==13){
+      keys[i]={pubkey: new PublicKey("DnFwu1LKF7WqnKvrYAVKLoqQ8M1Asz2BN8CRqbYXKATF"), isSigner: false, isWritable: true}
+    }
     if (i==14){//system_program account 11111111111111111111111111111111
       keys[i]={pubkey: new PublicKey("11111111111111111111111111111111"), isSigner: false, isWritable: true}
     }
