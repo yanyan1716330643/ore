@@ -87,54 +87,86 @@ async function main() {
 
   }
 
-  // 假设的 bump 值
-  // const cmd = Buffer.from("d");
-  // const bus_0_bump = Buffer.from("0");
-  // const bus_1_bump = Buffer.from("1");
-  // const bus_2_bump = Buffer.from("2");
-  // const bus_3_bump = Buffer.from("3");
-  // const bus_4_bump = Buffer.from("4");
-  // const bus_5_bump = Buffer.from("5");
-  // const bus_6_bump = Buffer.from("6");
-  // const bus_7_bump = Buffer.from("7");
-  // const config_bump = Buffer.from("8");
-  // const metadata_bump = Buffer.from("9");
-  // const mint_bump = Buffer.from("a");
-  // const treasury_bump = Buffer.from("b");
-  // const data = Buffer.concat([cmd,bus_0_bump, bus_1_bump, bus_2_bump, bus_3_bump, bus_4_bump, bus_5_bump, bus_6_bump, bus_7_bump, config_bump, metadata_bump, mint_bump, treasury_bump])
-  // const data = Buffer.concat([cmd])
   const data = Buffer.alloc(13);
   data.writeUInt8(100,0);
-  let seedStrArray = new Array(12);
-  seedStrArray[0]="bus"
-  seedStrArray[1]="bus"
-  seedStrArray[2]="bus"
-  seedStrArray[3]="bus"
-  seedStrArray[4]="bus"
-  seedStrArray[5]="bus"
-  seedStrArray[6]="bus"
-  seedStrArray[7]="bus"
-  seedStrArray[8]="config"
-  seedStrArray[9]="metadata"
-  seedStrArray[10]="mint"
-  seedStrArray[11]="proof"
-  seedStrArray[12]="treasury"
+  // let seedStrArray = new Array(12);
+  // seedStrArray[0]="bus"
+  // seedStrArray[1]="bus"
+  // seedStrArray[2]="bus"
+  // seedStrArray[3]="bus"
+  // seedStrArray[4]="bus"
+  // seedStrArray[5]="bus"
+  // seedStrArray[6]="bus"
+  // seedStrArray[7]="bus"
+  // seedStrArray[8]="config"
+  // seedStrArray[9]="metadata"
+  // seedStrArray[10]="mint"
+  // seedStrArray[11]="proof"
+  // seedStrArray[12]="treasury"
 
 
 
-  let seeds = new Array(12);
-  let bumps = new Array(12);
-  for(let i=1;i<13;i++){
-    seeds[i-1] = Buffer.from(seedStrArray[i-1])
-  }
+  // let seeds = new Array(12);
+  let bumps = new Array(13);
+  // for(let i=1;i<13;i++){
+  //   if (i>0&&i<9){
+  //     if(i==1){
+  //       seeds[i-1] = Buffer.from(seedStrArray[i-1])
+  //     }else {
+  //
+  //       // const iBytes = Buffer.from([i]);
+  //       // seeds[i-1] = Buffer.concat([Buffer.from(seedStrArray[i-1]), iBytes]);
+  //       seeds[i-1] = Buffer.from([98, 117, 115, i-1]);//bus i
+  //     }
+  //
+  //   }else {
+  //     if (i==10){
+  //       const mint = Buffer.from([109, 105, 110, 116]);
+  //       const noise = Buffer.from([89, 157, 88, 232, 243, 249, 197, 132, 199, 49, 19, 234, 91, 94, 150, 41]);
+  //       seeds[i-1] = Buffer.concat([mint, noise]);
+  //     } else {
+  //       seeds[i-1] = Buffer.from(seedStrArray[i-1])
+  //     }
+  //   }
+  // }
+
   // 计算每个种子的 PDA 和 bump 值
-  for (let i = 0; i < seeds.length; i++) {
-    const [pda, bump] = await PublicKey.findProgramAddress([seeds[i]], programId);
-    bumps[i] = bump; // 存储 bump 值
+  for (let i = 0; i < bumps.length; i++) {
+    if (i==0){
+      bumps[i] =  100;
+    }
+    if (i>=1&&i<=8){//bus0~7
+      const seeds = Buffer.from([98, 117, 115, i-1])
+      const [pda, bump] = await PublicKey.findProgramAddress([seeds], programId);
+
+      bumps[i] = bump;
+    }
+    if (i==9){//config
+      let config_seed = Buffer.from("config")
+      const [pda, bump] = await PublicKey.findProgramAddress([config_seed], programId);
+      bumps[i] = bump;
+    }
+    if (i==10){//metadata
+      let metadata_seed = Buffer.from("metadata")
+      const [pda, bump] = await PublicKey.findProgramAddress([metadata_seed], programId);
+      bumps[i] = bump;
+    }
+    if (i==11){//mint
+      // let mint_seed = Buffer.from("mint")
+      const mint_seed = Buffer.from([109, 105, 110, 116]);
+      const noise = Buffer.from([89, 157, 88, 232, 243, 249, 197, 132, 199, 49, 19, 234, 91, 94, 150, 41].slice());
+      const [pda, bump] = await PublicKey.findProgramAddress([mint_seed, noise], programId);
+      bumps[i] = bump;
+    }
+    if (i==12){//treasury
+      let treasury_seed = Buffer.from("treasury")
+      const [pda, bump] = await PublicKey.findProgramAddress([treasury_seed], programId);
+      bumps[i] = bump;
+    }
   }
   // 使用 bumps 填充剩余的缓冲区
-  for (let i = 1; i < 13; i++) {
-    data.writeUInt8(bumps[i - 1], i); // 将 bump 值写入缓冲区
+  for (let i = 0; i < bumps.length; i++) {
+    data.writeUInt8(bumps[i], i); // 将 bump 值写入缓冲区
   }
   let keys = new Array(19);
   // let keys = [];
@@ -152,7 +184,7 @@ async function main() {
       const userKeypairTemp = Keypair.fromSecretKey(userSecretKeyTemp);
 
       let userPublicKeyTemp: PublicKey = userKeypairTemp.publicKey;
-      keys[i]={pubkey: userKeypairTemp.publicKey, isSigner: false, isWritable: false}
+      keys[i]={pubkey: userKeypairTemp.publicKey, isSigner: false, isWritable: true}
     }
 
   }
@@ -179,7 +211,7 @@ async function main() {
   });
   await sendAndConfirmTransaction(
     connection,
-    new Transaction().add(instruction).add(ComputeBudgetProgram.setComputeUnitLimit({ units: 8_00_000 })),
+    new Transaction().add(instruction).add(ComputeBudgetProgram.setComputeUnitLimit({ units: 18_00_000 })),
     [userKeypair],
   ).then(r=>{
     console.log("=======","50","program ping success",r);

@@ -89,7 +89,7 @@ pub fn process_initialize(accounts: &[AccountInfo<'_>], data: &[u8]) -> ProgramR
     // );
 
     load_signer(signer)?;
-    msg!("process_initialize_3.1");
+
     load_uninitialized_pda(bus_0_info, &[BUS, &[0]], args.bus_0_bump, &ore_api::id())?;
     load_uninitialized_pda(bus_1_info, &[BUS, &[1]], args.bus_1_bump, &ore_api::id())?;
     load_uninitialized_pda(bus_2_info, &[BUS, &[2]], args.bus_2_bump, &ore_api::id())?;
@@ -109,18 +109,21 @@ pub fn process_initialize(accounts: &[AccountInfo<'_>], data: &[u8]) -> ProgramR
         args.metadata_bump,
         &mpl_token_metadata::ID,
     )?;
+    msg!("process_initialize_3.1");
     load_uninitialized_pda(
         mint_info,
         &[MINT, MINT_NOISE.as_slice()],
         args.mint_bump,
         &ore_api::id(),
     )?;
+    msg!("process_initialize_3.2");
     load_uninitialized_pda(
         treasury_info,
         &[TREASURY],
         args.treasury_bump,
         &ore_api::id(),
     )?;
+    msg!("process_initialize_3.3");
     load_system_account(treasury_tokens_info, true)?;
     load_program(system_program, system_program::id())?;
     load_program(token_program, spl_token::id())?;
