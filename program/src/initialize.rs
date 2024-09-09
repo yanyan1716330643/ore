@@ -98,7 +98,9 @@ pub fn process_initialize(accounts: &[AccountInfo<'_>], data: &[u8]) -> ProgramR
     load_uninitialized_pda(bus_5_info, &[BUS, &[5]], args.bus_5_bump, &ore_api::id())?;
     load_uninitialized_pda(bus_6_info, &[BUS, &[6]], args.bus_6_bump, &ore_api::id())?;
     load_uninitialized_pda(bus_7_info, &[BUS, &[7]], args.bus_7_bump, &ore_api::id())?;
+    msg!("process_initialize_3.0.1");
     load_uninitialized_pda(config_info, &[CONFIG], args.config_bump, &ore_api::id())?;
+    msg!("process_initialize_3.0.2");
     load_uninitialized_pda(
         metadata_info,
         &[
@@ -109,21 +111,21 @@ pub fn process_initialize(accounts: &[AccountInfo<'_>], data: &[u8]) -> ProgramR
         args.metadata_bump,
         &mpl_token_metadata::ID,
     )?;
-    // msg!("process_initialize_3.1");
+    msg!("process_initialize_3.1");
     load_uninitialized_pda(
         mint_info,
         &[MINT, MINT_NOISE.as_slice()],
         args.mint_bump,
         &ore_api::id(),
     )?;
-    // msg!("process_initialize_3.2");
+    msg!("process_initialize_3.2");
     load_uninitialized_pda(
         treasury_info,
         &[TREASURY],
         args.treasury_bump,
         &ore_api::id(),
     )?;
-    // msg!("process_initialize_3.3");
+    msg!("process_initialize_3.3");
     load_system_account(treasury_tokens_info, true)?;
     // msg!("process_initialize_3.4");
     load_program(system_program, system_program::id())?;
@@ -269,8 +271,15 @@ pub fn process_initialize(accounts: &[AccountInfo<'_>], data: &[u8]) -> ProgramR
         },
     }
     .invoke_signed(&[&[TREASURY, &[args.treasury_bump]]])?;
-
-    msg!("process_initialize_13");
+    msg!("TREASURY_TOKENS_ADDRESS {:?}",&TREASURY_TOKENS_ADDRESS);
+    msg!("process_initialize_13 .signer.{:?} .treasury_info.{:?} .treasury_tokens_info.{:?} .mint_info.{:?} .system_program.{:?} .token_program.{:?} .associated_token_program.{:?}",
+        signer,
+        treasury_info,
+        treasury_tokens_info,
+        mint_info,
+        system_program,
+        token_program,
+        associated_token_program);
     // Initialize treasury token account.
     create_ata(
         signer,
