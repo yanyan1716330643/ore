@@ -2,6 +2,7 @@ use solana_program::{
     account_info::AccountInfo, entrypoint::ProgramResult, pubkey::Pubkey, rent::Rent,
     sysvar::Sysvar,
 };
+use solana_program::{msg};
 
 /// Creates a new pda.
 #[inline(always)]
@@ -14,7 +15,9 @@ pub fn create_pda<'a, 'info>(
     payer: &'a AccountInfo<'info>,
 ) -> ProgramResult {
     let rent = Rent::get()?;
+    // msg!("create_pda.0 .target_account.{:?} .owner.{:?} .space.{:?} .pda_seeds.{:?} .system_program.{:?} .payer.{:?} .rent.{:?}",target_account,owner,space,pda_seeds,system_program,payer,rent);
     if target_account.lamports().eq(&0) {
+        msg!("create_pda.1");
         // If balance is zero, create account
         solana_program::program::invoke_signed(
             &solana_program::system_instruction::create_account(
@@ -32,13 +35,16 @@ pub fn create_pda<'a, 'info>(
             &[pda_seeds],
         )?;
     } else {
+        // msg!("create_pda.2");
         // Otherwise, if balance is nonzero:
 
         // 1) transfer sufficient lamports for rent exemption
         let rent_exempt_balance = rent
             .minimum_balance(space)
             .saturating_sub(target_account.lamports());
+        // msg!("create_pda.2.1");
         if rent_exempt_balance.gt(&0) {
+            // msg!("create_pda.2.2");
             solana_program::program::invoke(
                 &solana_program::system_instruction::transfer(
                     payer.key,
@@ -52,20 +58,21 @@ pub fn create_pda<'a, 'info>(
                 ],
             )?;
         }
-
+        msg!("create_pda.2.3 .target_account.{:?} .owner.{:?} .space as u64.{:?} .target_account.clone().{:?} .system_program.clone().{:?} .pda_seeds.{:?}",target_account,owner,space as u64,target_account.clone(),system_program.clone(),pda_seeds);
         // 2) allocate space for the account
         solana_program::program::invoke_signed(
             &solana_program::system_instruction::allocate(target_account.key, space as u64),
             &[target_account.clone(), system_program.clone()],
             &[pda_seeds],
         )?;
-
+        msg!("create_pda.2.4");
         // 3) assign our program as the owner
         solana_program::program::invoke_signed(
             &solana_program::system_instruction::assign(target_account.key, owner),
             &[target_account.clone(), system_program.clone()],
             &[pda_seeds],
         )?;
+        msg!("create_pda.2.5");
     }
 
     Ok(())

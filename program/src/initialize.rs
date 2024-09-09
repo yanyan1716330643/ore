@@ -45,7 +45,7 @@ pub fn process_initialize(accounts: &[AccountInfo<'_>], data: &[u8]) -> ProgramR
     else {
         return Err(ProgramError::NotEnoughAccountKeys);
     };
-    msg!("process_initialize_3");
+    // msg!("process_initialize_3");
     // 'Program log: Error: memory allocation failed, out of memory',
     // msg!("process_initialize_3 \
     // _signer_ {:?} \
@@ -141,13 +141,13 @@ pub fn process_initialize(accounts: &[AccountInfo<'_>], data: &[u8]) -> ProgramR
     if signer.key.ne(&INITIALIZER_ADDRESS) {
         return Err(ProgramError::MissingRequiredSignature);
     }
-    msg!("process_initialize_4 _signer.key.ne(&INITIALIZER_ADDRESS)_ {:?} ",signer.key.ne(&INITIALIZER_ADDRESS));
+    // msg!("process_initialize_4 _signer.key.ne(&INITIALIZER_ADDRESS)_ {:?} ",signer.key.ne(&INITIALIZER_ADDRESS));
     // Initialize bus accounts.
     let bus_infos = [
         bus_0_info, bus_1_info, bus_2_info, bus_3_info, bus_4_info, bus_5_info, bus_6_info,
         bus_7_info,
     ];
-    msg!("process_initialize_4.1");
+    // msg!("process_initialize_4.1");
     let bus_bumps = [
         args.bus_0_bump,
         args.bus_1_bump,
@@ -158,7 +158,7 @@ pub fn process_initialize(accounts: &[AccountInfo<'_>], data: &[u8]) -> ProgramR
         args.bus_6_bump,
         args.bus_7_bump,
     ];
-    msg!("process_initialize_4.2");
+    // msg!("process_initialize_4.2");
     for i in 0..BUS_COUNT {
         msg!("process_initialize_4.2.0 {}",i);
         create_pda(
@@ -192,7 +192,7 @@ pub fn process_initialize(accounts: &[AccountInfo<'_>], data: &[u8]) -> ProgramR
         system_program,
         signer,
     )?;
-    msg!("process_initialize_6");
+    // msg!("process_initialize_6");
     let mut config_data = config_info.data.borrow_mut();
     config_data[0] = Config::discriminator() as u8;
     let config = Config::try_from_bytes_mut(&mut config_data)?;
@@ -200,7 +200,7 @@ pub fn process_initialize(accounts: &[AccountInfo<'_>], data: &[u8]) -> ProgramR
     config.last_reset_at = 0;
     config.min_difficulty = INITIAL_MIN_DIFFICULTY as u64;
     config.top_balance = 0;
-    msg!("process_initialize_7");
+    // msg!("process_initialize_7");
     // Initialize treasury.
     create_pda(
         treasury_info,
@@ -210,12 +210,12 @@ pub fn process_initialize(accounts: &[AccountInfo<'_>], data: &[u8]) -> ProgramR
         system_program,
         signer,
     )?;
-    msg!("process_initialize_8");
+    // msg!("process_initialize_8");
     let mut treasury_data = treasury_info.data.borrow_mut();
     treasury_data[0] = Treasury::discriminator() as u8;
-    msg!("process_initialize_9");
+    // msg!("process_initialize_9");
     drop(treasury_data);
-    msg!("process_initialize_10");
+    // msg!("process_initialize_10");
     // Initialize mint.
     create_pda(
         mint_info,
@@ -225,7 +225,7 @@ pub fn process_initialize(accounts: &[AccountInfo<'_>], data: &[u8]) -> ProgramR
         system_program,
         signer,
     )?;
-    msg!("process_initialize_11");
+    // msg!("process_initialize_11");
     solana_program::program::invoke_signed(
         &spl_token::instruction::initialize_mint(
             &spl_token::id(),
@@ -242,7 +242,7 @@ pub fn process_initialize(accounts: &[AccountInfo<'_>], data: &[u8]) -> ProgramR
         ],
         &[&[MINT, MINT_NOISE.as_slice(), &[args.mint_bump]]],
     )?;
-    msg!("process_initialize_12");
+    // msg!("process_initialize_12");
 
     // Initialize mint metadata.
     mpl_token_metadata::instructions::CreateMetadataAccountV3Cpi {
@@ -270,7 +270,7 @@ pub fn process_initialize(accounts: &[AccountInfo<'_>], data: &[u8]) -> ProgramR
     }
     .invoke_signed(&[&[TREASURY, &[args.treasury_bump]]])?;
 
-    msg!("process_initialize_13");
+    // msg!("process_initialize_13");
     // Initialize treasury token account.
     create_ata(
         signer,

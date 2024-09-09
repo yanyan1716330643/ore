@@ -179,19 +179,19 @@ async function main() {
     //
     // }
     if (i==14){//system_program account 11111111111111111111111111111111
-      keys[i]={pubkey: new PublicKey("11111111111111111111111111111111"), isSigner: false, isWritable: false}
+      keys[i]={pubkey: new PublicKey("11111111111111111111111111111111"), isSigner: false, isWritable: true}
     }
     if (i==15){//token_program account TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA
-      keys[i]={pubkey: new PublicKey("TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"), isSigner: false, isWritable: false}
+      keys[i]={pubkey: new PublicKey("TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"), isSigner: false, isWritable: true}
     }
     if (i==16){//associated_token account ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL
-      keys[i]={pubkey: new PublicKey("ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL"), isSigner: false, isWritable: false}
+      keys[i]={pubkey: new PublicKey("ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL"), isSigner: false, isWritable: true}
     }
     if (i==17){//metadata_program account
-      keys[i]={pubkey: new PublicKey("metaqbxxUerdq28cj1RbAWkYQm3ybzjb6a8bt518x1s"), isSigner: false, isWritable: false}
+      keys[i]={pubkey: new PublicKey("metaqbxxUerdq28cj1RbAWkYQm3ybzjb6a8bt518x1s"), isSigner: false, isWritable: true}
     }
     if (i==18){//rent_sysvar account
-      keys[i]={pubkey: new PublicKey("SysvarRent111111111111111111111111111111111"), isSigner: false, isWritable: false}
+      keys[i]={pubkey: new PublicKey("SysvarRent111111111111111111111111111111111"), isSigner: false, isWritable: true}
     }
   }
   console.log("=======","50","start program ping");

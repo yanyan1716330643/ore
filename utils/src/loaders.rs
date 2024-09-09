@@ -6,16 +6,16 @@ use solana_program::{
 #[cfg(feature = "spl")]
 use spl_token::state::Mint;
 
-use solana_program::{msg};
+// use solana_program::{msg};
 
 /// Errors if:
 /// - Account is not a signer.
 pub fn load_signer(info: &AccountInfo<'_>) -> Result<(), ProgramError> {
-    msg!("load_signer_1 _info.is_signer_ {:?} ",!info.is_signer);
+    // msg!("load_signer_1 _info.is_signer_ {:?} ",!info.is_signer);
     if !info.is_signer {
         return Err(ProgramError::MissingRequiredSignature);
     }
-    msg!("load_signer_2");
+    // msg!("load_signer_2");
     Ok(())
 }
 
@@ -36,11 +36,11 @@ pub fn load_uninitialized_pda(
     // }
     // msg!("load_uninitialized_pda_3.1 _bump_ {:?} _pda_ {:?}",bump,pda);
     if bump.ne(&pda.1) {
-        msg!("load_uninitialized_pda_1 _info_ {:?} _seeds_ {:?} _bump_ {:?} _program_id_ {:?} ",info,seeds,bump,program_id);
-        msg!("load_uninitialized_pda_3.2 _bump_ {:?} _pda_ {:?}",bump,pda);
+        // msg!("load_uninitialized_pda_1 _info_ {:?} _seeds_ {:?} _bump_ {:?} _program_id_ {:?} ",info,seeds,bump,program_id);
+        // msg!("load_uninitialized_pda_3.2 _bump_ {:?} _pda_ {:?}",bump,pda);
         return Err(ProgramError::InvalidSeeds);
     }
-    msg!("load_uninitialized_pda_4");
+    // msg!("load_uninitialized_pda_4");
     load_system_account(info, true)
 }
 
@@ -50,16 +50,16 @@ pub fn load_uninitialized_pda(
 /// - Account is not writable.
 pub fn load_system_account(info: &AccountInfo<'_>, is_writable: bool) -> Result<(), ProgramError> {
     if info.owner.ne(&system_program::id()) {
-        msg!("load_system_account_1 _info_ {:?} _is_writable_ {:?}",info,is_writable);
+        // msg!("load_system_account_1 _info_ {:?} _is_writable_ {:?}",info,is_writable);
         return Err(ProgramError::InvalidAccountOwner);
     }
     if !info.data_is_empty() {
-        msg!("load_system_account_2");
+        // msg!("load_system_account_2");
         return Err(ProgramError::AccountAlreadyInitialized);
     }
 
     if is_writable && !info.is_writable {
-        msg!("load_system_account_3");
+        // msg!("load_system_account_3");
         return Err(ProgramError::InvalidAccountData);
     }
     // msg!("load_system_account_4");
@@ -103,12 +103,12 @@ pub fn load_account(
 pub fn load_program(info: &AccountInfo<'_>, key: Pubkey) -> Result<(), ProgramError> {
     // msg!("load_program_1 _info_ {:?} _key_ {:?}",info,key);
     if info.key.ne(&key) {
-        msg!("load_program_1 _info_ {:?} _key_ {:?}",info,key);
+        // msg!("load_program_1 _info_ {:?} _key_ {:?}",info,key);
         return Err(ProgramError::IncorrectProgramId);
     }
     // msg!("load_program_2");
     if !info.executable {
-        msg!("load_program_2 _info_ {:?} _key_ {:?}",info,key);
+        // msg!("load_program_2 _info_ {:?} _key_ {:?}",info,key);
         return Err(ProgramError::InvalidAccountData);
     }
     // msg!("load_program_3");
