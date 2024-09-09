@@ -101,50 +101,8 @@ async function main() {
   let keys = new Array(19);
   let singers = new Array(9);
 
-  // 计算每个种子的 PDA 和 bump 值
-  for (let i = 0; i < bumps.length; i++) {
-    if (i==0){
-      bumps[i] =  OreInstruction.Initialize;
-    }
-    if (i>=1&&i<=8){//bus0~7
-      const seeds = Buffer.from([98, 117, 115, i-1])
-      const [pda, bump] = await PublicKey.findProgramAddress([seeds], programId);
-
-      bumps[i] = bump;
-    }
-    if (i==9){//config
-      let config_seed = Buffer.from("config")
-      const [pda, bump] = await PublicKey.findProgramAddress([config_seed], programId);
-      bumps[i] = bump;
-    }
-    if (i==10){//metadata
-      let metadata_seed = Buffer.from("metadata")
-      const [pda, bump] = await PublicKey.findProgramAddress([metadata_seed], programId);
-      bumps[i] = bump;
-    }
-    if (i==11){//mint
-      // let mint_seed = Buffer.from("mint")
-      const mint_seed = Buffer.from([109, 105, 110, 116]);
-      const noise = Buffer.from([89, 157, 88, 232, 243, 249, 197, 132, 199, 49, 19, 234, 91, 94, 150, 41].slice());
-      const [pda, bump] = await PublicKey.findProgramAddress([mint_seed, noise], programId);
-      bumps[i] = bump;
-    }
-    if (i==12){//treasury
-      let treasury_seed = Buffer.from("treasury")
-      const [pda, bump] = await PublicKey.findProgramAddress([treasury_seed], programId);
-      bumps[i] = bump;
-    }
-  }
-
-  // 使用 bumps 填充剩余的缓冲区
-  for (let i = 0; i < bumps.length; i++) {
-    data.writeUInt8(bumps[i], i); // 将 bump 值写入缓冲区
-  }
-
   // let keys = []; 设置每个账户
   for (let i = 0; i < 19; i++) {
-
-
     if (i==0){//signer account
       keys[i]={pubkey: userKeypair.publicKey, isSigner: true, isWritable: true}
     }
@@ -200,6 +158,61 @@ async function main() {
       keys[i]={pubkey: new PublicKey("SysvarRent111111111111111111111111111111111"), isSigner: false, isWritable: true}
     }
   }
+
+  // 计算每个种子的 PDA 和 bump 值
+  for (let i = 0; i < bumps.length; i++) {
+    if (i==0){
+      bumps[i] =  OreInstruction.Initialize;
+    }
+    if (i>=1&&i<=8){//bus0~7
+      const seeds = Buffer.from([98, 117, 115, i-1])
+      const [pda, bump] = await PublicKey.findProgramAddress([seeds], programId);
+      keys[i].pubkey = pda;
+      bumps[i] = bump;
+      console.log(pda.toBase58(),bump)
+    }
+    if (i==9){//config
+      let config_seed = Buffer.from("config")
+      const [pda, bump] = await PublicKey.findProgramAddress([config_seed], programId);
+      keys[i].pubkey = pda;
+      bumps[i] = bump;
+      console.log(pda.toBase58(),bump)
+    }
+    if (i==10){//metadata
+      let metadata_seed = Buffer.from("metadata");
+      let b1 = Buffer.from([109, 101, 116, 97, 100, 97, 116, 97]);
+      let MPL_TOKEN_METADATA_ID = new PublicKey("metaqbxxUerdq28cj1RbAWkYQm3ybzjb6a8bt518x1s")
+      //这里计算比较复杂，直接取物理值先用着
+      let b3 = Buffer.from([54, 180, 171, 27, 40, 119, 119, 169, 119, 124, 188, 174, 91, 175, 134, 209, 249, 252, 152, 237, 82, 113, 155, 244, 180, 232, 229, 177, 219, 40, 53, 105])
+      const [pda, bump] = await PublicKey.findProgramAddress([b1,MPL_TOKEN_METADATA_ID.toBytes(),b3], MPL_TOKEN_METADATA_ID);
+      keys[i].pubkey = pda;
+      bumps[i] = bump;
+      console.log(pda.toBase58(),bump)
+    }
+    if (i==11){//mint
+      // let mint_seed = Buffer.from("mint")
+      const mint_seed = Buffer.from([109, 105, 110, 116]);
+      const noise = Buffer.from([89, 157, 88, 232, 243, 249, 197, 132, 199, 49, 19, 234, 91, 94, 150, 41].slice());
+      const [pda, bump] = await PublicKey.findProgramAddress([mint_seed, noise], programId);
+      keys[i].pubkey = pda;
+      bumps[i] = bump;
+      console.log(pda.toBase58(),bump)
+    }
+    if (i==12){//treasury
+      let treasury_seed = Buffer.from("treasury")
+      const [pda, bump] = await PublicKey.findProgramAddress([treasury_seed], programId);
+      keys[i].pubkey = pda;
+      bumps[i] = bump;
+      console.log(pda.toBase58(),bump)
+    }
+  }
+
+  // 使用 bumps 填充剩余的缓冲区
+  for (let i = 0; i < bumps.length; i++) {
+    data.writeUInt8(bumps[i], i); // 将 bump 值写入缓冲区
+  }
+
+
   console.log("=======","50","start program ping");
   const instruction = new TransactionInstruction({
     // @ts-ignore
