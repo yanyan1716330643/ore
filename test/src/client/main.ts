@@ -14,6 +14,19 @@ import fs from 'mz/fs';
 import path from 'path';
 
 
+// 定义枚举
+const OreInstruction = {
+  Claim: 0,
+  Close: 1,
+  Mine: 2,
+  Open: 3,
+  Reset: 4,
+  Stake: 5,
+  Update: 6,
+  Upgrade: 7,
+  Initialize: 100
+};
+
 
 const PROGRAM_KEYPAIR_PATH = path.join(
   path.resolve(__dirname, '../../../deploy'),
@@ -90,7 +103,7 @@ async function main() {
   // 计算每个种子的 PDA 和 bump 值
   for (let i = 0; i < bumps.length; i++) {
     if (i==0){
-      bumps[i] =  100;
+      bumps[i] =  OreInstruction.Initialize;
     }
     if (i>=1&&i<=8){//bus0~7
       const seeds = Buffer.from([98, 117, 115, i-1])
@@ -166,19 +179,19 @@ async function main() {
     //
     // }
     if (i==14){//system_program account 11111111111111111111111111111111
-      keys[i]={pubkey: new PublicKey("11111111111111111111111111111111"), isSigner: false, isWritable: true}
+      keys[i]={pubkey: new PublicKey("11111111111111111111111111111111"), isSigner: false, isWritable: false}
     }
     if (i==15){//token_program account TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA
-      keys[i]={pubkey: new PublicKey("TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"), isSigner: false, isWritable: true}
+      keys[i]={pubkey: new PublicKey("TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"), isSigner: false, isWritable: false}
     }
     if (i==16){//associated_token account ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL
-      keys[i]={pubkey: new PublicKey("ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL"), isSigner: false, isWritable: true}
+      keys[i]={pubkey: new PublicKey("ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL"), isSigner: false, isWritable: false}
     }
     if (i==17){//metadata_program account
-      keys[i]={pubkey: new PublicKey("metaqbxxUerdq28cj1RbAWkYQm3ybzjb6a8bt518x1s"), isSigner: false, isWritable: true}
+      keys[i]={pubkey: new PublicKey("metaqbxxUerdq28cj1RbAWkYQm3ybzjb6a8bt518x1s"), isSigner: false, isWritable: false}
     }
     if (i==18){//rent_sysvar account
-      keys[i]={pubkey: new PublicKey("SysvarRent111111111111111111111111111111111"), isSigner: false, isWritable: true}
+      keys[i]={pubkey: new PublicKey("SysvarRent111111111111111111111111111111111"), isSigner: false, isWritable: false}
     }
   }
   console.log("=======","50","start program ping");
@@ -188,19 +201,6 @@ async function main() {
     keys: keys,
     programId,
     data: data,
-    //data: Buffer.from("0XXXXXXXXX"), 48 88 88 ...
-    // User
-    // Claim = 0,
-    // Close = 1,
-    // Mine = 2,
-    // Open = 3,
-    // Reset = 4,
-    // Stake = 5,
-    // Update = 6,
-    // Upgrade = 7,
-    //
-    // // Admin
-    // Initialize = 100,
   });
   await sendAndConfirmTransaction(
     connection,
