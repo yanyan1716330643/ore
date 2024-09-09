@@ -99,6 +99,7 @@ async function main() {
   const data = Buffer.alloc(13);
   let bumps = new Array(13);
   let keys = new Array(19);
+  let singers = new Array(9);
 
   // 计算每个种子的 PDA 和 bump 值
   for (let i = 0; i < bumps.length; i++) {
@@ -160,7 +161,12 @@ async function main() {
       const userKeypairTemp = Keypair.fromSecretKey(userSecretKeyTemp);
 
       let userPublicKeyTemp: PublicKey = userKeypairTemp.publicKey;
-      keys[i]={pubkey: userKeypairTemp.publicKey, isSigner: false, isWritable: true}
+      if (i>=1&&i<=8){//bus
+        singers[i] = userKeypairTemp;
+        keys[i]={pubkey: userKeypairTemp.publicKey, isSigner: false, isWritable: true}
+      }else {//others
+        keys[i]={pubkey: userKeypairTemp.publicKey, isSigner: false, isWritable: true}
+      }
     }
 
     // if (i==9){//config account
@@ -202,10 +208,11 @@ async function main() {
     programId,
     data: data,
   });
+  singers[0] = userKeypair;
   await sendAndConfirmTransaction(
     connection,
     new Transaction().add(instruction).add(ComputeBudgetProgram.setComputeUnitLimit({ units: 18_00_000 })),
-    [userKeypair],
+      [singers[0]],
   ).then(r=>{
     console.log("=======","50","program ping success",r);
   }).catch(e=>{
