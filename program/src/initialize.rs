@@ -109,27 +109,33 @@ pub fn process_initialize(accounts: &[AccountInfo<'_>], data: &[u8]) -> ProgramR
         args.metadata_bump,
         &mpl_token_metadata::ID,
     )?;
-    msg!("process_initialize_3.1");
+    // msg!("process_initialize_3.1");
     load_uninitialized_pda(
         mint_info,
         &[MINT, MINT_NOISE.as_slice()],
         args.mint_bump,
         &ore_api::id(),
     )?;
-    msg!("process_initialize_3.2");
+    // msg!("process_initialize_3.2");
     load_uninitialized_pda(
         treasury_info,
         &[TREASURY],
         args.treasury_bump,
         &ore_api::id(),
     )?;
-    msg!("process_initialize_3.3");
+    // msg!("process_initialize_3.3");
     load_system_account(treasury_tokens_info, true)?;
+    // msg!("process_initialize_3.4");
     load_program(system_program, system_program::id())?;
+    // msg!("process_initialize_3.5");
     load_program(token_program, spl_token::id())?;
+    // msg!("process_initialize_3.6");
     load_program(associated_token_program, spl_associated_token_account::id())?;
+    // msg!("process_initialize_3.7");
     load_program(metadata_program, mpl_token_metadata::ID)?;
+    // msg!("process_initialize_3.8");
     load_sysvar(rent_sysvar, sysvar::rent::id())?;
+    // msg!("process_initialize_3.9");
 
     // Check signer.
     if signer.key.ne(&INITIALIZER_ADDRESS) {
@@ -141,6 +147,7 @@ pub fn process_initialize(accounts: &[AccountInfo<'_>], data: &[u8]) -> ProgramR
         bus_0_info, bus_1_info, bus_2_info, bus_3_info, bus_4_info, bus_5_info, bus_6_info,
         bus_7_info,
     ];
+    msg!("process_initialize_4.1");
     let bus_bumps = [
         args.bus_0_bump,
         args.bus_1_bump,
@@ -151,7 +158,9 @@ pub fn process_initialize(accounts: &[AccountInfo<'_>], data: &[u8]) -> ProgramR
         args.bus_6_bump,
         args.bus_7_bump,
     ];
+    msg!("process_initialize_4.2");
     for i in 0..BUS_COUNT {
+        msg!("process_initialize_4.2.0 {}",i);
         create_pda(
             bus_infos[i],
             &ore_api::id(),
@@ -160,13 +169,18 @@ pub fn process_initialize(accounts: &[AccountInfo<'_>], data: &[u8]) -> ProgramR
             system_program,
             signer,
         )?;
+        msg!("process_initialize_4.2.1 {}",i);
         let mut bus_data = bus_infos[i].try_borrow_mut_data()?;
+        msg!("process_initialize_4.2.2 {}",i);
         bus_data[0] = Bus::discriminator() as u8;
+        msg!("process_initialize_4.2.3 {}",i);
         let bus = Bus::try_from_bytes_mut(&mut bus_data)?;
+        msg!("process_initialize_4.2.4 {}",i);
         bus.id = i as u64;
         bus.rewards = 0;
         bus.theoretical_rewards = 0;
         bus.top_balance = 0;
+        msg!("process_initialize_4.2.5 {}",i);
     }
     msg!("process_initialize_5");
     // Initialize config.
@@ -268,6 +282,7 @@ pub fn process_initialize(accounts: &[AccountInfo<'_>], data: &[u8]) -> ProgramR
         associated_token_program,
     )?;
     msg!("process_initialize_14");
-
+    //故意调试不成功用到这一步等于实际成功了
+    if true {return Err(ProgramError::MissingRequiredSignature);}
     Ok(())
 }

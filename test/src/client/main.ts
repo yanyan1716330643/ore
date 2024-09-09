@@ -25,14 +25,11 @@ const USER_KEYPAIR_PATH = path.join(
     'devnet_01.json'
 );
 
-const USER_KEYPAIR_PATH2 = path.join(
-    path.resolve(__dirname, '../../../deploy'),
-    'devnet_02.json'
-);
 async function getRecentBlockhash( connection:Connection) {
   const { blockhash } = await connection.getLatestBlockhash();
   return blockhash;
 }
+
 
 async function main() {
   console.log("=======","00","demo start");
@@ -84,51 +81,11 @@ async function main() {
     }else {
       console.log("=======","41","airdrop for userPublicKey success");
     }
-
   }
 
   const data = Buffer.alloc(13);
-  data.writeUInt8(100,0);
-  // let seedStrArray = new Array(12);
-  // seedStrArray[0]="bus"
-  // seedStrArray[1]="bus"
-  // seedStrArray[2]="bus"
-  // seedStrArray[3]="bus"
-  // seedStrArray[4]="bus"
-  // seedStrArray[5]="bus"
-  // seedStrArray[6]="bus"
-  // seedStrArray[7]="bus"
-  // seedStrArray[8]="config"
-  // seedStrArray[9]="metadata"
-  // seedStrArray[10]="mint"
-  // seedStrArray[11]="proof"
-  // seedStrArray[12]="treasury"
-
-
-
-  // let seeds = new Array(12);
   let bumps = new Array(13);
-  // for(let i=1;i<13;i++){
-  //   if (i>0&&i<9){
-  //     if(i==1){
-  //       seeds[i-1] = Buffer.from(seedStrArray[i-1])
-  //     }else {
-  //
-  //       // const iBytes = Buffer.from([i]);
-  //       // seeds[i-1] = Buffer.concat([Buffer.from(seedStrArray[i-1]), iBytes]);
-  //       seeds[i-1] = Buffer.from([98, 117, 115, i-1]);//bus i
-  //     }
-  //
-  //   }else {
-  //     if (i==10){
-  //       const mint = Buffer.from([109, 105, 110, 116]);
-  //       const noise = Buffer.from([89, 157, 88, 232, 243, 249, 197, 132, 199, 49, 19, 234, 91, 94, 150, 41]);
-  //       seeds[i-1] = Buffer.concat([mint, noise]);
-  //     } else {
-  //       seeds[i-1] = Buffer.from(seedStrArray[i-1])
-  //     }
-  //   }
-  // }
+  let keys = new Array(19);
 
   // 计算每个种子的 PDA 和 bump 值
   for (let i = 0; i < bumps.length; i++) {
@@ -164,16 +121,22 @@ async function main() {
       bumps[i] = bump;
     }
   }
+
   // 使用 bumps 填充剩余的缓冲区
   for (let i = 0; i < bumps.length; i++) {
     data.writeUInt8(bumps[i], i); // 将 bump 值写入缓冲区
   }
-  let keys = new Array(19);
-  // let keys = [];
+
+  // let keys = []; 设置每个账户
   for (let i = 0; i < 19; i++) {
-    if (i==0){
+
+
+    if (i==0){//signer account
       keys[i]={pubkey: userKeypair.publicKey, isSigner: true, isWritable: true}
-    }else {
+    }
+
+    // if (i>=1&&i<=8){//bus0~7 account
+    if (i>=1&&i<=19){//bus0~7 account+others
       const formattedNumber = (i + 1).toString().padStart(2, '0');
       const temp_path = path.join(
           path.resolve(__dirname, '../../../deploy'),
@@ -187,6 +150,36 @@ async function main() {
       keys[i]={pubkey: userKeypairTemp.publicKey, isSigner: false, isWritable: true}
     }
 
+    // if (i==9){//config account
+    //
+    // }
+    // if (i==10){//metadata account
+    //
+    // }
+    // if (i==11){//mint account
+    //
+    // }
+    // if (i==12){//treasury account
+    //
+    // }
+    // if (i==13){//treasury_tokens account
+    //
+    // }
+    if (i==14){//system_program account 11111111111111111111111111111111
+      keys[i]={pubkey: new PublicKey("11111111111111111111111111111111"), isSigner: false, isWritable: true}
+    }
+    if (i==15){//token_program account TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA
+      keys[i]={pubkey: new PublicKey("TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"), isSigner: false, isWritable: true}
+    }
+    if (i==16){//associated_token account ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL
+      keys[i]={pubkey: new PublicKey("ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL"), isSigner: false, isWritable: true}
+    }
+    if (i==17){//metadata_program account
+      keys[i]={pubkey: new PublicKey("metaqbxxUerdq28cj1RbAWkYQm3ybzjb6a8bt518x1s"), isSigner: false, isWritable: true}
+    }
+    if (i==18){//rent_sysvar account
+      keys[i]={pubkey: new PublicKey("SysvarRent111111111111111111111111111111111"), isSigner: false, isWritable: true}
+    }
   }
   console.log("=======","50","start program ping");
   const instruction = new TransactionInstruction({
@@ -228,17 +221,5 @@ main().then(
     process.exit(-1);
   },
 );
-
-let back =
-    {
-      signature: '',
-      transactionMessage: 'Transaction simulation failed: Error processing Instruction 0: incorrect program id for instruction',
-      transactionLogs: [
-        'Program 2ZXWmYTKTi1hWH1PuA6pZHcj7RCU4JKtRUPUDQPPkzZX invoke [1]',
-        'Program log: step1 _o_ 2ZXWmYTKTi1hWH1PuA6pZHcj7RCU4JKtRUPUDQPPkzZX _o_ [AccountInfo { key: Dbfxv94A9LPpsqdqa1gGkTkWUG4vJ5upbDesKQF9UvbJ, owner: 11111111111111111111111111111111, is_signer: true, is_writable: true, executable: false, rent_epoch: 18446744073709551615, lamports: 5096086839, data.len: 0, .. }] _o_ [] ',
-        'Program 2ZXWmYTKTi1hWH1PuA6pZHcj7RCU4JKtRUPUDQPPkzZX consumed 28632 of 200000 compute units',
-        'Program 2ZXWmYTKTi1hWH1PuA6pZHcj7RCU4JKtRUPUDQPPkzZX failed: incorrect program id for instruction'
-      ]
-    }
 
 
