@@ -1,7 +1,5 @@
 use std::mem::size_of;
-use solana_program::{
-    msg
-};
+// use solana_program::{msg};
 use ore_api::{
     consts::*,
     instruction::*,
@@ -98,9 +96,9 @@ pub fn process_initialize(accounts: &[AccountInfo<'_>], data: &[u8]) -> ProgramR
     load_uninitialized_pda(bus_5_info, &[BUS, &[5]], args.bus_5_bump, &ore_api::id())?;
     load_uninitialized_pda(bus_6_info, &[BUS, &[6]], args.bus_6_bump, &ore_api::id())?;
     load_uninitialized_pda(bus_7_info, &[BUS, &[7]], args.bus_7_bump, &ore_api::id())?;
-    msg!("process_initialize_3.0.1");
+    // msg!("process_initialize_3.0.1");
     load_uninitialized_pda(config_info, &[CONFIG], args.config_bump, &ore_api::id())?;
-    msg!("process_initialize_3.0.2");
+    // msg!("process_initialize_3.0.2");
     load_uninitialized_pda(
         metadata_info,
         &[
@@ -111,21 +109,21 @@ pub fn process_initialize(accounts: &[AccountInfo<'_>], data: &[u8]) -> ProgramR
         args.metadata_bump,
         &mpl_token_metadata::ID,
     )?;
-    msg!("process_initialize_3.1");
+    // msg!("process_initialize_3.1");
     load_uninitialized_pda(
         mint_info,
         &[MINT, MINT_NOISE.as_slice()],
         args.mint_bump,
         &ore_api::id(),
     )?;
-    msg!("process_initialize_3.2");
+    // msg!("process_initialize_3.2");
     load_uninitialized_pda(
         treasury_info,
         &[TREASURY],
         args.treasury_bump,
         &ore_api::id(),
     )?;
-    msg!("process_initialize_3.3");
+    // msg!("process_initialize_3.3");
     load_system_account(treasury_tokens_info, true)?;
     // msg!("process_initialize_3.4");
     load_program(system_program, system_program::id())?;
@@ -184,7 +182,7 @@ pub fn process_initialize(accounts: &[AccountInfo<'_>], data: &[u8]) -> ProgramR
         bus.top_balance = 0;
         // msg!("process_initialize_4.2.5 {}",i);
     }
-    msg!("process_initialize_5");
+    // msg!("process_initialize_5");
     // Initialize config.
     create_pda(
         config_info,
@@ -194,7 +192,7 @@ pub fn process_initialize(accounts: &[AccountInfo<'_>], data: &[u8]) -> ProgramR
         system_program,
         signer,
     )?;
-    msg!("process_initialize_6");
+    // msg!("process_initialize_6");
     let mut config_data = config_info.data.borrow_mut();
     config_data[0] = Config::discriminator() as u8;
     let config = Config::try_from_bytes_mut(&mut config_data)?;
@@ -202,7 +200,7 @@ pub fn process_initialize(accounts: &[AccountInfo<'_>], data: &[u8]) -> ProgramR
     config.last_reset_at = 0;
     config.min_difficulty = INITIAL_MIN_DIFFICULTY as u64;
     config.top_balance = 0;
-    msg!("process_initialize_7");
+    // msg!("process_initialize_7");
     // Initialize treasury.
     create_pda(
         treasury_info,
@@ -212,12 +210,12 @@ pub fn process_initialize(accounts: &[AccountInfo<'_>], data: &[u8]) -> ProgramR
         system_program,
         signer,
     )?;
-    msg!("process_initialize_8");
+    // msg!("process_initialize_8");
     let mut treasury_data = treasury_info.data.borrow_mut();
     treasury_data[0] = Treasury::discriminator() as u8;
-    msg!("process_initialize_9");
+    // msg!("process_initialize_9");
     drop(treasury_data);
-    msg!("process_initialize_10");
+    // msg!("process_initialize_10");
     // Initialize mint.
     create_pda(
         mint_info,
@@ -227,7 +225,7 @@ pub fn process_initialize(accounts: &[AccountInfo<'_>], data: &[u8]) -> ProgramR
         system_program,
         signer,
     )?;
-    msg!("process_initialize_11");
+    // msg!("process_initialize_11");
     solana_program::program::invoke_signed(
         &spl_token::instruction::initialize_mint(
             &spl_token::id(),
@@ -244,7 +242,7 @@ pub fn process_initialize(accounts: &[AccountInfo<'_>], data: &[u8]) -> ProgramR
         ],
         &[&[MINT, MINT_NOISE.as_slice(), &[args.mint_bump]]],
     )?;
-    msg!("process_initialize_12");
+    // msg!("process_initialize_12");
 
     // Initialize mint metadata.
     mpl_token_metadata::instructions::CreateMetadataAccountV3Cpi {
@@ -271,15 +269,15 @@ pub fn process_initialize(accounts: &[AccountInfo<'_>], data: &[u8]) -> ProgramR
         },
     }
     .invoke_signed(&[&[TREASURY, &[args.treasury_bump]]])?;
-    msg!("TREASURY_TOKENS_ADDRESS {:?}",&TREASURY_TOKENS_ADDRESS);
-    msg!("process_initialize_13 .signer.{:?} .treasury_info.{:?} .treasury_tokens_info.{:?} .mint_info.{:?} .system_program.{:?} .token_program.{:?} .associated_token_program.{:?}",
-        signer,
-        treasury_info,
-        treasury_tokens_info,
-        mint_info,
-        system_program,
-        token_program,
-        associated_token_program);
+    // msg!("TREASURY_TOKENS_ADDRESS {:?}",&TREASURY_TOKENS_ADDRESS);
+    // msg!("process_initialize_13 .signer.{:?} .treasury_info.{:?} .treasury_tokens_info.{:?} .mint_info.{:?} .system_program.{:?} .token_program.{:?} .associated_token_program.{:?}",
+    //     signer,
+    //     treasury_info,
+    //     treasury_tokens_info,
+    //     mint_info,
+    //     system_program,
+    //     token_program,
+    //     associated_token_program);
     // Initialize treasury token account.
     create_ata(
         signer,
@@ -290,8 +288,8 @@ pub fn process_initialize(accounts: &[AccountInfo<'_>], data: &[u8]) -> ProgramR
         token_program,
         associated_token_program,
     )?;
-    msg!("process_initialize_14");
+    // msg!("process_initialize_14");
     //故意调试不成功用到这一步等于实际成功了
-    if true {return Err(ProgramError::MissingRequiredSignature);}
+    // if true {return Err(ProgramError::MissingRequiredSignature);}
     Ok(())
 }

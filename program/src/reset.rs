@@ -10,6 +10,7 @@ use solana_program::{
     program_error::ProgramError, program_pack::Pack, sysvar::Sysvar,
 };
 use spl_token::state::Mint;
+use solana_program::{msg};
 
 /// Reset tops up the bus balances, updates the base reward rate, and sets up the ORE program for the next epoch.
 pub fn process_reset(accounts: &[AccountInfo<'_>], _data: &[u8]) -> ProgramResult {
@@ -108,6 +109,7 @@ pub fn process_reset(accounts: &[AccountInfo<'_>], _data: &[u8]) -> ProgramResul
     let amount = MAX_SUPPLY
         .saturating_sub(mint.supply)
         .min(total_epoch_rewards);
+    msg!("process_reset _amount_ {:?} ",amount);
     solana_program::program::invoke_signed(
         &spl_token::instruction::mint_to(
             &spl_token::id(),
