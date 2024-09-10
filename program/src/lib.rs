@@ -18,7 +18,7 @@ use stake::*;
 use update::*;
 use upgrade::*;
 
-use solana_program::{msg};
+// use solana_program::{msg};
 
 use ore_api::instruction::*;
 use solana_program::{
@@ -44,7 +44,7 @@ pub fn process_instruction(
     // msg!("v0.10");//调试定位日志 第十次load_uninitialized_pda异常定位
     // msg!("v0.11");//调试定位日志 process_initialize_4.2
     // msg!("process_instruction_1 _program_id_ {:?} _accounts_ {:?} _data_ {:?} ",program_id,accounts,data);
-    msg!("v0.12");// 初始化已经完成
+    // msg!("v0.12");// 初始化已经完成
 
     if program_id.ne(&ore_api::id()) {
         return Err(ProgramError::IncorrectProgramId);
@@ -58,17 +58,17 @@ pub fn process_instruction(
 
     // msg!("process_instruction_3 _tag_ {:?} _data_ {:?} ",tag,data);
 
-    match OreInstruction::try_from(*tag).or(Err(ProgramError::InvalidInstructionData))? {
-        OreInstruction::Claim =>  msg!("Claim instruction received."),
-        OreInstruction::Close =>  msg!("Close instruction received."),
-        OreInstruction::Mine =>  msg!("Mine instruction received."),
-        OreInstruction::Open =>  msg!("Open instruction received."),
-        OreInstruction::Reset =>  msg!("Reset instruction received."),
-        OreInstruction::Stake =>  msg!("Stake instruction received."),
-        OreInstruction::Update =>  msg!("Update instruction received."),
-        OreInstruction::Upgrade =>  msg!("Upgrade instruction received."),
-        OreInstruction::Initialize =>  msg!("Initialize instruction received."),
-    }
+    // match OreInstruction::try_from(*tag).or(Err(ProgramError::InvalidInstructionData))? {
+    //     OreInstruction::Claim =>  msg!("Claim instruction received."),
+    //     OreInstruction::Close =>  msg!("Close instruction received."),
+    //     OreInstruction::Mine =>  msg!("Mine instruction received."),
+    //     OreInstruction::Open =>  msg!("Open instruction received."),
+    //     OreInstruction::Reset =>  msg!("Reset instruction received."),
+    //     OreInstruction::Stake =>  msg!("Stake instruction received."),
+    //     OreInstruction::Update =>  msg!("Update instruction received."),
+    //     OreInstruction::Upgrade =>  msg!("Upgrade instruction received."),
+    //     OreInstruction::Initialize =>  msg!("Initialize instruction received."),
+    // }
 
     match OreInstruction::try_from(*tag).or(Err(ProgramError::InvalidInstructionData))? {
         OreInstruction::Claim => process_claim(accounts, data)?,

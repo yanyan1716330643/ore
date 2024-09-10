@@ -5,7 +5,7 @@ use crate::{
     consts::*,
     state::{Bus, Config, Proof, Treasury},
 };
-
+use solana_program::{msg};
 /// Errors if:
 /// - Owner is not Ore program.
 /// - Address does not match the expected bus address.
@@ -199,23 +199,29 @@ pub fn load_any_proof(info: &AccountInfo<'_>, is_writable: bool) -> Result<(), P
 /// - Data cannot deserialize into a treasury account.
 /// - Expected to be writable, but is not.
 pub fn load_treasury(info: &AccountInfo<'_>, is_writable: bool) -> Result<(), ProgramError> {
+    msg!("load_treasury1 .info.{:?}",info);
     if info.owner.ne(&crate::id()) {
+        msg!("load_treasury2 .&crate::id().{:?}",&crate::id());
         return Err(ProgramError::InvalidAccountOwner);
     }
 
     if info.key.ne(&TREASURY_ADDRESS) {
+        msg!("load_treasury3 .&TREASURY_ADDRESS.{:?}",&TREASURY_ADDRESS);
         return Err(ProgramError::InvalidSeeds);
     }
 
     if info.data_is_empty() {
+        msg!("load_treasury4 .info.data_is_empty().{:?}",info.data_is_empty());
         return Err(ProgramError::UninitializedAccount);
     }
 
     if info.data.borrow()[0].ne(&(Treasury::discriminator() as u8)) {
+        msg!("load_treasury5 .&(Treasury::discriminator() as u8).{:?}",&(Treasury::discriminator() as u8));
         return Err(solana_program::program_error::ProgramError::InvalidAccountData);
     }
 
     if is_writable && !info.is_writable {
+        msg!("load_treasury6");
         return Err(ProgramError::InvalidAccountData);
     }
 

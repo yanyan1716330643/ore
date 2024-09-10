@@ -5,6 +5,8 @@
 - reset记录 
   - 3qiimftfC72xCG3ECa84TkB4YjAyuSjAn6vAE1HJbhZiAu9wg1oRD972xejg7E2au46rwuqyc6PQSN7n6reDKWC4
   - 5a1bzAAxDgu3mCfmVh8Q9Ue51B8Ws6gg8Wpn8An89jistP4eWrdU2iFviFCPzfC1pF1q9obkx1VtsKPzoYSSmRXJ
+- claim记录
+  - 4EErXxgN42CofhTS6kTTr5pYqbdi5KCCAN7sp7UATqSJucJtZQNE2cqLnb3rTJ8irjyvHSeQfwTcVx6VMyq8frDE
 
 # 合约发布
 ```
