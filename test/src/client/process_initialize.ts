@@ -1,25 +1,15 @@
 import {
-  Keypair,
   Connection,
   PublicKey,
-  LAMPORTS_PER_SOL,
   TransactionInstruction,
-  Transaction,
-  ComputeBudgetProgram,
-  sendAndConfirmTransaction, Blockhash,
 } from '@solana/web3.js';
-// @ts-ignore
-import fs from 'mz/fs';
-// @ts-ignore
-import path from 'path';
-// 从 tokenType.ts 文件中导入 TokenType 枚举
+
 
 import {
   OreInstruction,
   getRecentBlockhash,
   loadProgramId,
   loadInitKeyPair,
-  airdrop
 } from './common/Common';
 
 
@@ -43,6 +33,8 @@ async function process_initialize() {
   let bumps = new Array(13);
   //account
   let keys = new Array(19);
+  //
+  let signer = [];
   //操作
   let func = OreInstruction.Initialize;
 
@@ -52,6 +44,7 @@ async function process_initialize() {
     if (i==0){
       keys[i]={pubkey: userKeypair.publicKey, isSigner: true, isWritable: true}
       bumps[i] =  func.value;
+      signer.push(userKeypair)
     }
 
     //bus0~7 account pda
@@ -145,7 +138,7 @@ async function process_initialize() {
   }
 
 
-  console.log(userKeypair.publicKey.toBase58(),"signer")
+  console.log(signer[0].publicKey.toBase58(),"signer")
 
   const instruction = new TransactionInstruction({keys: keys, programId, data: data,});
 
@@ -153,7 +146,7 @@ async function process_initialize() {
   // await sendAndConfirmTransaction(
   //     connection,
   //     new Transaction().add(instruction).add(ComputeBudgetProgram.setComputeUnitLimit({ units: 18_00_000 })),
-  //     [userKeypair],
+  //     signer,
   // ).then(r=>{
   //   console.log("=======",func.name,"success",r);
   // }).catch(e=>{

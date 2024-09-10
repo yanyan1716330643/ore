@@ -12,7 +12,6 @@
         "process_initialize": "ts-node src/client/process_initialize.ts",
         "process_reset": "ts-node src/client/process_reset.ts",
         "process_claim": "ts-node src/client/process_claim.ts",
-        "js_start": "node src/client/test.js",
         "cargo_version": "cargo -V",
         "program:cargo_check": "cargo check --manifest-path=./src/program/Cargo.toml",
         "program:cargo_clean": "cargo clean --manifest-path=./src/program/Cargo.toml",
