@@ -5,16 +5,15 @@ import fs from "mz/fs";
 // @ts-ignore
 import path from "path";
 
-export enum OreInstruction  {
-    Claim = 0,
-    Close= 1,
-    Mineexport = 2,
-    Openexport = 3,
-    Resetexport = 4,
-    Stake= 5,
-    Update= 6,
-    Upgrade= 7,
-    Initialize= 100
+export const OreInstruction = {
+    Claim: { name: 'Claim', value: 0 },
+    Close: { name: 'Close', value: 1 },
+    Mineexport: { name: 'Mineexport', value: 2 },
+    Openexport: { name: 'Mineexport', value: 3 },
+    Resetexport: { name: 'Resetexport', value: 4 },
+    Update: { name: 'Update', value: 5 },
+    Upgrade: { name: 'Upgrade', value: 6 },
+    Initialize: { name: 'Initialize', value: 100 },
 };
 
 
@@ -53,8 +52,8 @@ export async function airdrop(userPublicKey:PublicKey,connection:Connection) {
         airdropErr = e;
     }
     if (airdropErr){
-        console.error("=======","41","airdrop err",airdropErr);
+        console.error("=======","airdrop err",airdropErr.toString());
     }else {
-        console.log("=======","41","airdrop for userPublicKey success");
+        console.log("=======","airdrop for userPublicKey success");
     }
 }
