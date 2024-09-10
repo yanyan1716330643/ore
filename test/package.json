@@ -9,7 +9,8 @@
     "scripts": {
         "init": "npm i",
         "check": "node -v && npm run cargo_version && npm run program:cargo_check",
-        "ts_start": "ts-node src/client/main.ts",
+        "process_initialize": "ts-node src/client/process_initialize.ts",
+        "process_reset": "ts-node src/client/process_reset.ts",
         "js_start": "node src/client/test.js",
         "cargo_version": "cargo -V",
         "program:cargo_check": "cargo check --manifest-path=./src/program/Cargo.toml",
