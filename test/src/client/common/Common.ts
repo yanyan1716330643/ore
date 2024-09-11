@@ -26,6 +26,11 @@ export const OreInstruction = {
 };
 
 
+export const FTPublicKey = {
+    Yanyan01: { name: '严研01 挖矿号',value: "DWGbimNkfY6Lws5wyr9xvCMJqDvpmGMGsbb5KS4QhgDY",json:"[81,226,125,10,211,43,100,210,169,207,185,247,196,18,97,4,168,184,184,14,220,177,152,27,199,243,221,66,203,238,252,129,185,203,185,87,234,194,49,196,62,184,1,215,66,87,141,190,9,178,44,1,85,30,213,81,128,179,184,190,210,167,128,35]" },
+    Longqing01: { name: '赵龙青01', value: "6ZRaHZDvujdXedXB7EoTpa3eJs6xmtwXnAfrAe3jfD6k" },
+};
+
 export async function getRecentBlockhash( connection:Connection) {
     const { blockhash } = await connection.getLatestBlockhash();
     return blockhash;
@@ -68,13 +73,14 @@ export async function airdrop(userPublicKey:PublicKey,connection:Connection) {
 }
 
 
-// 查询PDA的SPL Token余额
-export async function getBalance(connection: Connection, publicKey: PublicKey) {
+
+export async function getMintBalance(connection: Connection, publicKey: PublicKey,mintPublicKey: PublicKey) {
     try {
         return await connection.getParsedTokenAccountsByOwner(publicKey,
             // filter => mint: PublicKey|programId: PublicKey;
             {
-                mint:new PublicKey("4gYoPEcS8KCRWhfovkaQ9CpPVR8hBqN3oJQn3BMxem9r")
+                // mint:new PublicKey("4gYoPEcS8KCRWhfovkaQ9CpPVR8hBqN3oJQn3BMxem9r")
+                mint:mintPublicKey
             }).then(data=>{
             //console.log(JSON.stringify(data, null, 2))
             // const a_mint_base64 = "4gYoPEcS8KCRWhfovkaQ9CpPVR8hBqN3oJQn3BMxem9r";
@@ -95,14 +101,11 @@ export async function getBalance(connection: Connection, publicKey: PublicKey) {
 }
 
 
-export async function getAtaAndAccountByPayer(connection:Connection, programId :PublicKey, payer:Keypair) {
-    // Token 的 Mint 公钥
-    const tokenMintAddress = new PublicKey("4gYoPEcS8KCRWhfovkaQ9CpPVR8hBqN3oJQn3BMxem9r")
-    //
-    // const ownerAddress = new PublicKey("AimGt9NrjL4J4ZEYbn1iR2rcissqYLghRCxFsx4WXgVC")
-    const ownerAddress = payer.publicKey
+export async function getTokenAccount(connection:Connection, tokenMintAddress :PublicKey, payer:Keypair, ownerPublicKey:PublicKey) {
+    // const ownerAddress = payer.publicKey
+    // const payerPublickKey = payer.publicKey
     // 计算关联的 Token 账户地址
-    const associatedTokenAddress = await getAssociatedTokenAddress(tokenMintAddress, ownerAddress);
+    const associatedTokenAddress = await getAssociatedTokenAddress(tokenMintAddress, ownerPublicKey);
     // 获取账户信息
     const accountInfo = await connection.getAccountInfo(associatedTokenAddress);
 
@@ -113,8 +116,8 @@ export async function getAtaAndAccountByPayer(connection:Connection, programId :
         // 创建关联 Token 账户的指令
         const createATACIx = createAssociatedTokenAccountInstruction(
             payer, // payer
-            payer, // user's wallet address
-            ownerAddress, // owner of the token account
+            ownerPublicKey, // user's wallet address
+            ownerPublicKey, // owner of the token account
             tokenMintAddress // token mint address
         );
 

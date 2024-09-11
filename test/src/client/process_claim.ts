@@ -17,8 +17,7 @@ import path from 'path';
 import {
   OreInstruction,
   getRecentBlockhash,
-  loadProgramId,
-   getAtaAndAccountByPayer, getBalance
+  loadProgramId, getMintBalance, getTokenAccount
 } from './common/Common';
 
 
@@ -64,8 +63,9 @@ async function process_initialize() {
       const beneficiaryString = await fs.readFile(path.join(path.resolve(__dirname, '../../../deploy'), 'devnet_03.json'), {encoding: 'utf8'});
       const beneficiarySecretKey = Uint8Array.from(JSON.parse(beneficiaryString));
       const beneficiaryKeypair = Keypair.fromSecretKey(beneficiarySecretKey);
-      let [beneficiaryATA,account] = await getAtaAndAccountByPayer(connection,programId,beneficiaryKeypair)
-      let lamport = await getBalance(connection,beneficiaryKeypair.publicKey)
+      let mintPublicKey = new PublicKey("4gYoPEcS8KCRWhfovkaQ9CpPVR8hBqN3oJQn3BMxem9r")
+      let [beneficiaryATA,account] = await getTokenAccount(connection,mintPublicKey,beneficiaryKeypair,beneficiaryKeypair.publicKey)
+      let lamport = await getMintBalance(connection,beneficiaryKeypair.publicKey,mintPublicKey)
       keys[i] = {pubkey: beneficiaryATA, isSigner: false, isWritable: true}
       console.log(keys[i].pubkey.toBase58(),"beneficiary 收款账户","ore lamport:",lamport)
     }
@@ -121,15 +121,15 @@ async function process_initialize() {
   const instruction = new TransactionInstruction({keys: keys, programId, data: data,});
 
   console.log("=======","ready to",func.name);
-  // await sendAndConfirmTransaction(
-  //     connection,
-  //     new Transaction().add(instruction).add(ComputeBudgetProgram.setComputeUnitLimit({ units: 18_00_000 })),
-  //     signer,
-  // ).then(r=>{
-  //   console.log("=======",func.name,"success",r);
-  // }).catch(e=>{
-  //   console.log("=======",func.name,"err",e);
-  // })
+  await sendAndConfirmTransaction(
+      connection,
+      new Transaction().add(instruction).add(ComputeBudgetProgram.setComputeUnitLimit({ units: 18_00_000 })),
+      signer,
+  ).then(r=>{
+    console.log("=======",func.name,"success",r);
+  }).catch(e=>{
+    console.log("=======",func.name,"err",e);
+  })
 }
 
 
