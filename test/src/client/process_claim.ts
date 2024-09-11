@@ -121,15 +121,15 @@ async function process_initialize() {
   const instruction = new TransactionInstruction({keys: keys, programId, data: data,});
 
   console.log("=======","ready to",func.name);
-  await sendAndConfirmTransaction(
-      connection,
-      new Transaction().add(instruction).add(ComputeBudgetProgram.setComputeUnitLimit({ units: 18_00_000 })),
-      signer,
-  ).then(r=>{
-    console.log("=======",func.name,"success",r);
-  }).catch(e=>{
-    console.log("=======",func.name,"err",e);
-  })
+  // await sendAndConfirmTransaction(
+  //     connection,
+  //     new Transaction().add(instruction).add(ComputeBudgetProgram.setComputeUnitLimit({ units: 18_00_000 })),
+  //     signer,
+  // ).then(r=>{
+  //   console.log("=======",func.name,"success",r);
+  // }).catch(e=>{
+  //   console.log("=======",func.name,"err",e);
+  // })
 }
 
 

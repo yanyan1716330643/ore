@@ -89,13 +89,16 @@ pub const MINT_NOISE: [u8; 16] = [
 ];
 
 /// The name for token metadata.
-pub const METADATA_NAME: &str = "ORE";
+// pub const METADATA_NAME: &str = "ORE";
+pub const METADATA_NAME: &str = "JarvisBot";
 
 /// The ticker symbol for token metadata.
-pub const METADATA_SYMBOL: &str = "ORE";
+// pub const METADATA_SYMBOL: &str = "ORE";
+pub const METADATA_SYMBOL: &str = "JVS";
 
 /// The uri for token metdata.
-pub const METADATA_URI: &str = "https://ore.supply/metadata-v2.json";
+// pub const METADATA_URI: &str = "https://ore.supply/metadata-v2.json";
+pub const METADATA_URI: &str = "https://oss.jarvisbot.ai/manifest.json";
 
 /// Program id for const pda derivations
 const PROGRAM_ID: [u8; 32] = unsafe { *(&crate::id() as *const Pubkey as *const [u8; 32]) };

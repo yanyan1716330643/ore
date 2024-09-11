@@ -1,6 +1,7 @@
 import {
+  ComputeBudgetProgram,
   Connection,
-  PublicKey,
+  PublicKey, sendAndConfirmTransaction, Transaction,
   TransactionInstruction,
 } from '@solana/web3.js';
 
